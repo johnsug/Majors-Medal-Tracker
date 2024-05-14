@@ -49,30 +49,28 @@ pvt = pvt.\
   pivot_table(index=['Nationality'], columns=['Rank'], values='count', fill_value=0).\
   reset_index()
 
+# total column
+pvt['Total'] = pvt['Gold'] + pvt['Silver'] + pvt['Bronze']
+pvt = pvt.sort_values(['Total', 'Gold', 'Silver', 'Bronze'], 
+                      ascending=[False, False, False, False])
+pvt = pvt[['Nationality', 'Gold', 'Silver', 'Bronze', 'Total']]
+pvt = pvt.set_index('Nationality')
+
+## rename columns
+pvt = pvt.rename(columns={'Gold':   '🥇', 
+                          'Silver': '🥈', 
+                          'Bronze': '🥉', 
+                          'Total':  '🏆'})
+
+# Display the styled DataFrame 'pvt' in Streamlit
+st.subheader('Medals')
 st.write(pvt)
 
-# # total column
-# pvt['Total'] = pvt['Gold'] + pvt['Silver'] + pvt['Bronze']
-# pvt = pvt.sort_values(['Total', 'Gold', 'Silver', 'Bronze'], 
-#                       ascending=[False, False, False, False])
-# pvt = pvt[['Nationality', 'Gold', 'Silver', 'Bronze', 'Total']]
-# pvt = pvt.set_index('Nationality')
+# List races as text separated by commas
+st.write(f'**Race List:** {", ".join(filtered_race_list)}')
 
-# ## rename columns
-# pvt = pvt.rename(columns={'Gold':   '🥇', 
-#                           'Silver': '🥈', 
-#                           'Bronze': '🥉', 
-#                           'Total':  '🏆'})
-
-# # Display the styled DataFrame 'pvt' in Streamlit
-# st.subheader('Medals')
-# st.write(pvt)
-
-# # List races as text separated by commas
-# st.write(f'**Race List:** {", ".join(filtered_race_list)}')
-
-# # Write races
-# st.write('Full Results:')
-# st.write(filtered_results.set_index(['Date', 'Race', 'Rank']))
+# Write races
+st.write('Full Results:')
+st.write(filtered_results.set_index(['Date', 'Race', 'Rank']))
 
 

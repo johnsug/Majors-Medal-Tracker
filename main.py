@@ -22,6 +22,8 @@ series = st.radio(label='Race Series',
                            'American Classics', '200+'],  
                   horizontal=True)
 
+report_view = st.radio(label='View', options=['Nationality', 'Sponsor', 'Coach'], horizontal=True)
+
 # Map the selected radio button value to the abbreviation in xref DataFrame
 selected_race_abr = xref.loc[xref['race'] == series, 'abr'].values[0]
 
@@ -38,30 +40,71 @@ filtered_results['Rank'] = filtered_results['Rank'].\
   replace('2', 'Silver', regex=True).\
   replace('3', 'Bronze', regex=True)
 
-# find counts
-pvt = filtered_results[['Nationality', 'Rank']].\
-  value_counts().\
-  reset_index().\
-  rename(columns={0: "count"})
+## dynamic data slicing ##################################################
+if report_view == 'Nationality':
 
-# pivot
-pvt = pvt.\
-  pivot_table(index=['Nationality'], columns=['Rank'], values='count', fill_value=0).\
-  reset_index()
+  # find counts
+  pvt = filtered_results[['Nationality', 'Rank']].\
+    value_counts().\
+    reset_index().\
+    rename(columns={0: "count"})
+  
+  # pivot
+  pvt = pvt.\
+    pivot_table(index=['Nationality'], columns=['Rank'], values='count', fill_value=0).\
+    reset_index()
+  
+  # total column
+  pvt = pvt.rename(columns={'Gold': '🥇', 'Silver': '🥈', 'Bronze': '🥉'})
+  pvt['🏆'] = pvt['🥇'] + pvt['🥈'] + pvt['🥉']
+  pvt = pvt.sort_values(['🏆', '🥇', '🥈', '🥉'], ascending=[False, False, False, False])
+  pvt = pvt[['Nationality', '🥇', '🥈', '🥉', '🏆']]
+  ## set index
+  pvt = pvt.set_index('Nationality')
+  
+if report_view == 'Sponsor': ##################################################
 
-# total column
-pvt['Total'] = pvt['Gold'] + pvt['Silver'] + pvt['Bronze']
-pvt = pvt.sort_values(['Total', 'Gold', 'Silver', 'Bronze'], 
-                      ascending=[False, False, False, False])
-pvt = pvt[['Nationality', 'Gold', 'Silver', 'Bronze', 'Total']]
-pvt = pvt.set_index('Nationality')
+  # find counts
+  pvt = filtered_results[['Main Sponsor', 'Rank']].\
+    value_counts().\
+    reset_index().\
+    rename(columns={0: "count"})
+  
+  # pivot
+  pvt = pvt.\
+    pivot_table(index=['Main Sponsor'], columns=['Rank'], values='count', fill_value=0).\
+    reset_index()
+  
+  # total column
+  pvt = pvt.rename(columns={'Gold': '🥇', 'Silver': '🥈', 'Bronze': '🥉'})
+  pvt['🏆'] = pvt['🥇'] + pvt['🥈'] + pvt['🥉']
+  pvt = pvt.sort_values(['🏆', '🥇', '🥈', '🥉'], ascending=[False, False, False, False])
+  pvt = pvt[['Main Sponsor', '🥇', '🥈', '🥉', '🏆']]
+  ## set index
+  pvt = pvt.set_index('Main Sponsor')
+  
+if report_view == 'Coach': ##################################################
 
-## rename columns
-pvt = pvt.rename(columns={'Gold':   '🥇', 
-                          'Silver': '🥈', 
-                          'Bronze': '🥉', 
-                          'Total':  '🏆'})
+  # find counts
+  pvt = filtered_results[['Coach', 'Rank']].\
+    value_counts().\
+    reset_index().\
+    rename(columns={0: "count"})
 
+  # pivot
+  pvt = pvt.\
+    pivot_table(index=['Coach'], columns=['Rank'], values='count', fill_value=0).\
+    reset_index()
+
+  # total column
+  pvt = pvt.rename(columns={'Gold': '🥇', 'Silver': '🥈', 'Bronze': '🥉'})
+  pvt['🏆'] = pvt['🥇'] + pvt['🥈'] + pvt['🥉']
+  pvt = pvt.sort_values(['🏆', '🥇', '🥈', '🥉'], ascending=[False, False, False, False])
+  pvt = pvt[['Coach', '🥇', '🥈', '🥉', '🏆']]
+  ## set index
+  pvt = pvt.set_index('Coach')
+  
+  
 # Display the styled DataFrame 'pvt' in Streamlit
 st.subheader('Medals')
 st.write(pvt)
@@ -70,7 +113,7 @@ st.write(pvt)
 st.write(f'**Race List:** {", ".join(filtered_race_list)}')
 
 # Write races
-st.write('Full Results:')
+st.write('**Full Results:**')
 st.write(filtered_results.set_index(['Date', 'Race', 'Rank']))
 
 

@@ -42,14 +42,14 @@ filtered_results['Rank'] = filtered_results['Rank'].\
 pvt = filtered_results[['Nationality', 'Rank']].\
   value_counts().\
   reset_index().\
-  rename(columns={0: "Count"})
+  rename(columns={0: "count"})
+
+# pivot
+pvt = pvt.\
+  pivot_table(index=['Nationality'], columns=['Rank'], values='count', fill_value=0).\
+  reset_index()
 
 st.write(pvt)
-
-# # pivot
-# pvt = pvt.\
-#   pivot_table(index=['Nationality'], columns=['Rank'], values='Count', fill_value=0).\
-#   reset_index()
 
 # # total column
 # pvt['Total'] = pvt['Gold'] + pvt['Silver'] + pvt['Bronze']

@@ -38,11 +38,11 @@ filtered_results['Rank'] = filtered_results['Rank'].\
   replace('2', 'Silver', regex=True).\
   replace('3', 'Bronze', regex=True)
 
-# # find counts
-# pvt = filtered_results[['Nationality', 'Rank']].\
-#   value_counts().\
-#   reset_index().\
-#   rename(columns={0: "Count"})
+# find counts
+pvt = filtered_results[['Nationality', 'Rank']].\
+  value_counts().\
+  reset_index().\
+  rename(columns={0: "Count"})
 
 # # pivot
 # pvt = pvt.\

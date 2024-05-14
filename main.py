@@ -38,39 +38,39 @@ filtered_results['Rank'] = filtered_results['Rank'].\
   replace('2', 'Silver', regex=True).\
   replace('3', 'Bronze', regex=True)
 
-# find counts
-pvt = filtered_results[['Nationality', 'Rank']].\
-  value_counts().\
-  reset_index().\
-  rename(columns={0: "Count"})
+# # find counts
+# pvt = filtered_results[['Nationality', 'Rank']].\
+#   value_counts().\
+#   reset_index().\
+#   rename(columns={0: "Count"})
 
-# pivot
-pvt = pvt.\
-  pivot_table(index=['Nationality'], columns=['Rank'], values='Count', fill_value=0).\
-  reset_index()
+# # pivot
+# pvt = pvt.\
+#   pivot_table(index=['Nationality'], columns=['Rank'], values='Count', fill_value=0).\
+#   reset_index()
 
-# total column
-pvt['Total'] = pvt['Gold'] + pvt['Silver'] + pvt['Bronze']
-pvt = pvt.sort_values(['Total', 'Gold', 'Silver', 'Bronze'], 
-                      ascending=[False, False, False, False])
-pvt = pvt[['Nationality', 'Gold', 'Silver', 'Bronze', 'Total']]
-pvt = pvt.set_index('Nationality')
+# # total column
+# pvt['Total'] = pvt['Gold'] + pvt['Silver'] + pvt['Bronze']
+# pvt = pvt.sort_values(['Total', 'Gold', 'Silver', 'Bronze'], 
+#                       ascending=[False, False, False, False])
+# pvt = pvt[['Nationality', 'Gold', 'Silver', 'Bronze', 'Total']]
+# pvt = pvt.set_index('Nationality')
 
-## rename columns
-pvt = pvt.rename(columns={'Gold':   '🥇', 
-                          'Silver': '🥈', 
-                          'Bronze': '🥉', 
-                          'Total':  '🏆'})
+# ## rename columns
+# pvt = pvt.rename(columns={'Gold':   '🥇', 
+#                           'Silver': '🥈', 
+#                           'Bronze': '🥉', 
+#                           'Total':  '🏆'})
 
-# Display the styled DataFrame 'pvt' in Streamlit
-st.subheader('Medals')
-st.write(pvt)
+# # Display the styled DataFrame 'pvt' in Streamlit
+# st.subheader('Medals')
+# st.write(pvt)
 
-# List races as text separated by commas
-st.write(f'**Race List:** {", ".join(filtered_race_list)}')
+# # List races as text separated by commas
+# st.write(f'**Race List:** {", ".join(filtered_race_list)}')
 
-# Write races
-st.write('Full Results:')
-st.write(filtered_results.set_index(['Date', 'Race', 'Rank']))
+# # Write races
+# st.write('Full Results:')
+# st.write(filtered_results.set_index(['Date', 'Race', 'Rank']))
 
 

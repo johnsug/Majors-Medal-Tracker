@@ -44,10 +44,12 @@ pvt = filtered_results[['Nationality', 'Rank']].\
   reset_index().\
   rename(columns={0: "Count"})
 
-# # pivot
-# pvt = pvt.\
-#   pivot_table(index=['Nationality'], columns=['Rank'], values='Count', fill_value=0).\
-#   reset_index()
+# pivot
+pvt = pvt.\
+  pivot_table(index=['Nationality'], columns=['Rank'], values='Count', fill_value=0).\
+  reset_index()
+
+st.write(pvt)
 
 # # total column
 # pvt['Total'] = pvt['Gold'] + pvt['Silver'] + pvt['Bronze']

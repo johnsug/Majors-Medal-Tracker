@@ -114,6 +114,6 @@ st.write(f'**Race List:** {", ".join(filtered_race_list)}')
 
 # Write races
 st.write('**Full Results:**')
-st.write(filtered_results.set_index(['Date', 'Race', 'Rank']))
+st.write(filtered_results) #.set_index(['Date', 'Race', 'Rank']))
 
 
